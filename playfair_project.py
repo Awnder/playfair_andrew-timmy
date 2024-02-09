@@ -45,5 +45,11 @@ class Playfair:
         
         return ''.join(digrams)
 
+    def test(self):
+        pass
+
+    def test2(self):
+        pass
+
 if __name__ == '__main__':
     pass
