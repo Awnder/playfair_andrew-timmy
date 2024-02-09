@@ -11,18 +11,18 @@ class Playfair:
             playfair_grid.append(keyword[i:i+5])
         return playfair_grid
 
-    def removeKeywordDupes(self, keyword):
+    def removeKeywordDupes(keyword):
         newKey = ''
         for c in keyword:
             if c not in newKey:
                 newKey += c
         return newKey
 
-    def print_playfair_grid(self, playfair_grid):
+    def print_playfair_grid(playfair_grid):
         for row in playfair_grid:
             print(row)
 
-    def decode_playfair_digrams(self, ciphertext):
+    def decode_playfair_digrams(ciphertext):
         plaintext = []
         for index in range(len(ciphertext)-1, -1, -1):
             if index == 0 or index == len(ciphertext) - 1:
@@ -32,7 +32,7 @@ class Playfair:
                 plaintext.append(ciphertext[index])
         return ''.join(reversed(plaintext))
 
-    def encode_playfair_digrams(self, plaintext):
+    def encode_playfair_digrams(plaintext):
         digrams = list(plaintext.lower().replace(' ', ''))
         
         for i, digram in enumerate(digrams):
@@ -45,8 +45,16 @@ class Playfair:
         
         return ''.join(digrams)
     
-    def get_rectangle_shift(pos1, pos2):
+    def get_indecies_of_letter(grid, letter):
+        '''Returns a list of indecies (b/c 2d array) of an inputted letter in a given grid'''
+        
+
+    def get_rectangle_shift(pos1, pos2, encrypt):
         # ANDREW
+        '''
+        When two numbers are not in the same column or row, this function switches them along a rectangle, where 
+        pos1 and pos2 are a list of indecies in the grid. encrypt is bool determining sign (encrypt/decrypt)
+        '''
         
         return
     
