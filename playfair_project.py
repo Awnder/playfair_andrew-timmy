@@ -2,7 +2,7 @@ class Playfair:
     def __init__(self):
         pass
     
-    def create_playfair_key(self, keyword):
+    def create_playfair_grid(self, keyword):
         alphabet = "abcdfeghiklmnopqrstuvwxyz"
         playfair_grid = []
         keyword = self.removeKeywordDupes(keyword.lower().replace('j','').replace(' ',''))
@@ -22,7 +22,7 @@ class Playfair:
         for row in playfair_grid:
             print(row)
 
-    def decode_playfair_cypher(self, ciphertext):
+    def decode_playfair_digrams(self, ciphertext):
         plaintext = []
         for index in range(len(ciphertext)-1, -1, -1):
             if index == 0 or index == len(ciphertext) - 1:
@@ -44,6 +44,20 @@ class Playfair:
             digrams.append('q')
         
         return ''.join(digrams)
+    
+    def get_rectangle_shift(pos1, pos2):
+        return
+    
+    def get_column_shift(pos1, pos2, encrypt):
+        # encrypt is a bool - determines sign of addition
+        return
+    
+    def get_row_shift(pos1, pos2, encrypt):
+        return
+    
+    def crypt(text, key, encrypt=True):
+        #TODO
+        return
 
     def test(self):
         pass
