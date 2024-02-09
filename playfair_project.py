@@ -46,24 +46,21 @@ class Playfair:
         return ''.join(digrams)
     
     def get_rectangle_shift(pos1, pos2):
+        # ANDREW
         return
     
     def get_column_shift(pos1, pos2, encrypt):
+        # TIMMY
         # encrypt is a bool - determines sign of addition
         return
     
     def get_row_shift(pos1, pos2, encrypt):
+        # TIMMY
         return
     
     def crypt(text, key, encrypt=True):
         #TODO
         return
-
-    def test(self):
-        pass
-
-    def test2(self):
-        pass
 
 if __name__ == '__main__':
     pass
