@@ -47,6 +47,7 @@ class Playfair:
     
     def get_rectangle_shift(pos1, pos2):
         # ANDREW
+        
         return
     
     def get_column_shift(pos1, pos2, encrypt):
