@@ -46,8 +46,12 @@ class Playfair:
         return ''.join(digrams)
     
     def get_indecies_of_letter(grid, letter):
-        '''Returns a list of indecies (b/c 2d array) of an inputted letter in a given grid'''
-        
+        '''Returns a tuple of indecies (row, col) of an inputted letter in a given grid'''
+        for row in range(len(grid)):
+            print(grid[row])
+            if letter in grid[row]:
+                return (row, grid[row].index(letter))
+
 
     def get_rectangle_shift(pos1, pos2, encrypt):
         # ANDREW
