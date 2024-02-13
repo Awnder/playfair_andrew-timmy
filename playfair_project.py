@@ -60,8 +60,9 @@ class RailFence:
         return ciphertext
 
 class Playfair:
-    def __init__(self, keyword):
+    def __init__(self, keyword, encrypt):
         self.grid = self.create_playfair_grid(keyword)
+        self.encrypt = encrypt
     
     def create_playfair_grid(self):
         '''
@@ -171,8 +172,9 @@ class Playfair:
         return [newpos1, newpos2]
         return
     
-    def crypt(self, text, key, encrypt):
+    def crypt(self, text):
         # encrypt is a bool determining mode (encrypt or decrypt)
+        encrypt = self.encrypt
 
         crypted_digrams = []
 
@@ -180,7 +182,7 @@ class Playfair:
         input_digrams = self.encode_playfair_digrams(text)
 
         # Create grid from key
-        grid = self.create_playfair_grid(key)
+        grid = self.grid
 
         # Crypt digrams with the key
         for d in input_digrams:
@@ -226,7 +228,7 @@ def main():
             print(encrypted_message + Substitution(args.key).encrypt(args.text.lower()))
             pass
         elif args.algorithm == 'playfair':
-            print(encrypted_message + Playfair(args.key, True))
+            print(encrypted_message + Playfair(args.key, True).crypt(args.text.lower()))
     elif args.decrypt:
         if args.algorithm == 'railfence':
             print(decrypted_message + RailFence().decrypt(args.text))
@@ -235,7 +237,7 @@ def main():
             print(decrypted_message + Substitution(args.key).decrypt(args.text.lower()))
             pass
         elif args.algorithm == 'playfair':
-            print(decrypted_message + Playfair(args.key, False))
+            print(decrypted_message + Playfair(args.key, False).crypt(args.text.lower()))
     else:
         print('Flag or message error')
     return
