@@ -201,9 +201,9 @@ class Playfair:
 def main():
     parser = argparse.ArgumentParser(description='Translates between ciphertext and plaintext using chosen algorithms')
     parser.add_argument('-a', '--algorithm', choices=['railfence', 'substitution', 'playfair'], help='algorithm type', required=True)
-    text_type = parser.add_mutually_exclusive_group(required=True)
-    text_type.add_argument('-e', '--encrypt', action='store_true', help='message to encrypt')
-    text_type.add_argument('-d', '--decrypt', action='store_true', help='message to decrypt')
+    mode = parser.add_mutually_exclusive_group(required=False)
+    mode.add_argument('-e', '--encrypt', action='store_true', help='message to encrypt')
+    mode.add_argument('-d', '--decrypt', action='store_true', help='message to decrypt')
     parser.add_argument('-k', '--key', type=str, help='the key/password to use for playfair/substitution')
     parser.add_argument('-t', '--text', type=str, help='the text to encrypt or decrypt')
     args = parser.parse_args()
@@ -211,6 +211,9 @@ def main():
     if ((args.algorithm == 'substitution' or args.algorithm == 'playfair') and not args.key):
         print(f"Please provide a password for {args.algorithm}")
         return
+    
+    if ((args.algorithm == 'substitution' or args.algorithm == 'playfair') and not args.mode):
+        print(f"Please provide a mode (encrypt/decrypt) for {args.algorithm}")
     
     encrypted_message = "Encrypted Message: "
     decrypted_message = "Decrypted Message: "
@@ -223,7 +226,7 @@ def main():
             print(encrypted_message + Substitution(args.key).encrypt(args.text.lower()))
             pass
         elif args.algorithm == 'playfair':
-            print(encrypted_message + Playfair(args.key, args.encrypt))
+            print(encrypted_message + Playfair(args.key, True))
     elif args.decrypt:
         if args.algorithm == 'railfence':
             print(decrypted_message + RailFence().decrypt(args.text))
@@ -232,7 +235,7 @@ def main():
             print(decrypted_message + Substitution(args.key).decrypt(args.text.lower()))
             pass
         elif args.algorithm == 'playfair':
-            print(decrypted_message + Playfair(args.key, args.decrypt))
+            print(decrypted_message + Playfair(args.key, False))
     else:
         print('Flag or message error')
     return
