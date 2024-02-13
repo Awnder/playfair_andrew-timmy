@@ -80,10 +80,21 @@ class Playfair:
     def get_column_shift(pos1, pos2, encrypt):
         # TIMMY
         # encrypt is a bool - determines sign of addition
-        return
+
+        shift = 1 if encrypt else -1
+        newpos1 = (pos1[0], (pos1[1] + shift) % 5)
+        newpos2 = (pos2[0], (pos2[1] + shift) % 5)
+        
+        return [newpos1, newpos2]
     
     def get_row_shift(pos1, pos2, encrypt):
         # TIMMY
+
+        shift = 1 if encrypt else -1
+        newpos1 = ((pos1[0] + shift) % 5, pos1[1])
+        newpos2 = ((pos2[0] + shift) % 5, pos2[1])
+        
+        return [newpos1, newpos2]
         return
     
     def crypt(text, key, encrypt=True):
