@@ -219,23 +219,17 @@ def main():
     
     encrypted_message = "Encrypted Message: "
     decrypted_message = "Decrypted Message: "
-    
-    if args.encrypt:
-        if args.algorithm == 'railfence':
-            print(encrypted_message + RailFence().encrypt(args.text))
-            pass
-        elif args.algorithm == 'substitution':
+
+    if args.algorithm == 'railfence':
+        print(encrypted_message + RailFence().encrypt(args.text))
+    elif args.encrypt:
+        if args.algorithm == 'substitution':
             print(encrypted_message + Substitution(args.key).encrypt(args.text.lower()))
-            pass
         elif args.algorithm == 'playfair':
             print(encrypted_message + Playfair(args.key, True).crypt(args.text.lower()))
     elif args.decrypt:
-        if args.algorithm == 'railfence':
-            print(decrypted_message + RailFence().decrypt(args.text))
-            pass
-        elif args.algorithm == 'substitution':
+        if args.algorithm == 'substitution':
             print(decrypted_message + Substitution(args.key).decrypt(args.text.lower()))
-            pass
         elif args.algorithm == 'playfair':
             print(decrypted_message + Playfair(args.key, False).crypt(args.text.lower()))
     else:
