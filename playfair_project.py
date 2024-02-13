@@ -1,28 +1,28 @@
 class Playfair:
-    def __init__(self):
-        pass
+    def __init__(self, keyword):
+        self.grid = self.create_playfair_grid(keyword)
     
-    def create_playfair_grid(self, keyword):
+    def create_playfair_grid(self):
         alphabet = "abcdfeghiklmnopqrstuvwxyz"
         playfair_grid = []
         keyword = self.removeKeywordDupes(keyword.lower().replace('j','').replace(' ',''))
         keyword = self.removeKeywordDupes(keyword+alphabet)
         for i in range(0, len(alphabet), 5):
-            playfair_grid.append(keyword[i:i+5])
+            playfair_grid.append([keyword[i:i+5]])
         return playfair_grid
 
-    def removeKeywordDupes(keyword):
+    def removeKeywordDupes(self, keyword):
         newKey = ''
         for c in keyword:
             if c not in newKey:
                 newKey += c
         return newKey
 
-    def print_playfair_grid(playfair_grid):
-        for row in playfair_grid:
+    def print_playfair_grid(self):
+        for row in self.grid:
             print(row)
 
-    def decode_playfair_digrams(ciphertext):
+    def decode_playfair_digrams(self, ciphertext):
         plaintext = []
         for index in range(len(ciphertext)-1, -1, -1):
             if index == 0 or index == len(ciphertext) - 1:
@@ -32,7 +32,7 @@ class Playfair:
                 plaintext.append(ciphertext[index])
         return ''.join(reversed(plaintext))
 
-    def encode_playfair_digrams(plaintext):
+    def encode_playfair_digrams(self, plaintext):
         digrams = list(plaintext.lower().replace(' ', ''))
         
         for i, digram in enumerate(digrams):
@@ -45,15 +45,14 @@ class Playfair:
         
         return ''.join(digrams)
     
-    def get_indecies_of_letter(grid, letter):
+    def get_indecies_of_letter(self, letter):
         '''Returns a tuple of indecies (row, col) of an inputted letter in a given grid. Returns None otherwise'''
-        for row in range(len(grid)):
-            if letter in grid[row]:
-                return (row, grid[row].index(letter))
+        for row in range(len(self.grid)):
+            if letter in self.grid[row]:
+                return (row, self.grid[row].index(letter))
         return None
 
     def get_rectangle_shift(pos1, pos2):
-        # ANDREW
         '''
         When two letters are not in same column or row, switch them along a rectangle, where pos1 and pos2 are two 
         letters' indecies as (row, col) tuples. Bool encrypt isn't needed as function will flip letter location 
