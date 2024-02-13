@@ -55,7 +55,7 @@ class Playfair:
         
         return ''.join(digrams)
     
-    def get_indecies_of_letter(self, letter):
+    def get_pos(grid, letter):
         '''Returns a tuple of indecies (row, col) of an inputted letter in a given grid. Returns None otherwise'''
         for row in range(len(self.grid)):
             if letter in self.grid[row]:
@@ -112,9 +112,32 @@ class Playfair:
         return [newpos1, newpos2]
         return
     
-    def crypt(text, key, encrypt=True):
-        #TODO
-        return
+    def crypt(self, text, key, encrypt):
+        # encrypt is a bool determining mode (encrypt or decrypt)
+
+        crypted_digrams = []
+
+        # Turn text into digrams
+        input_digrams = self.encode_playfair_digrams(text)
+
+        # Create grid from key
+        grid = self.create_playfair_grid(key)
+
+        # Crypt digrams with the key
+        for d in input_digrams:
+            posits = [self.get_pos(d[0]), self.get_pos(d[1])]
+            if d[0][0] == d[1][0]:
+                crypted_digrams.append(self.get_column_shift(d[0], d[1], encrypt))
+            elif d[0][1] == d[1][1]:
+                crypted_digrams.append(self.get_row_shift(d[0], d[1], encrypt))
+            else:
+                crypted_digrams.append(self.get_rectangle_shift(d[0], d[1]))
+
+        # Decode the digrams
+        crypted = self.decode_playfair_digrams(crypted_digrams)
+
+        # Return the result
+        return crypted
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Translates between ciphertext and plaintext using chosen algorithms')
