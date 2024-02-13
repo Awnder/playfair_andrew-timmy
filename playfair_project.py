@@ -116,33 +116,44 @@ class Playfair:
         #TODO
         return
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(description='Translates between ciphertext and plaintext using chosen algorithms')
-    parser.add_argument('-a', '--algorithm', choices=['railfence', 'substitution'], help='algorithm type', required=True)
+    parser.add_argument('-a', '--algorithm', choices=['railfence', 'substitution', 'playfair'], help='algorithm type', required=True)
     text_type = parser.add_mutually_exclusive_group(required=True)
     text_type.add_argument('-e', '--encrypt', action='store_true', help='message to encrypt')
     text_type.add_argument('-d', '--decrypt', action='store_true', help='message to decrypt')
-    parser.add_argument('-p', '--password', type=str, help='the password to use for substitution')
+    parser.add_argument('-k', '--key', type=str, help='the key/password to use for playfair/substitution')
     parser.add_argument('text', type=str, help='the text to encrypt or decrypt')
     args = parser.parse_args()
 
-    if (args.algorithm == 'substitution' and not args.password):
-        print("Please provide a password for substitution")
-        exit()
+    if ((args.algorithm == 'substitution' or args.algorithm == 'playfair') and not args.key):
+        print(f"Please provide a password for {args.algorithm}")
+        return
     
     encrypted_message = "Encrypted Message: "
     decrypted_message = "Decrypted Message: "
     
     if args.encrypt:
         if args.algorithm == 'railfence':
-            print(encrypted_message + RailFence().encrypt(args.text))
+            #print(encrypted_message + RailFence().encrypt(args.text))
+            pass
         elif args.algorithm == 'substitution':
-            print(encrypted_message + Substitution(args.password).encrypt(args.text.lower()))
+            #print(encrypted_message + Substitution(args.key).encrypt(args.text.lower()))
+            pass
+        elif args.algorithm == 'playfair':
+            print(encrypted_message + Playfair(args.key, args.text_type))
     elif args.decrypt:
         if args.algorithm == 'railfence':
-            print(decrypted_message + RailFence().decrypt(args.text))
+            #print(decrypted_message + RailFence().decrypt(args.text))
+            pass
         elif args.algorithm == 'substitution':
-            print(decrypted_message + Substitution(args.password).decrypt(args.text.lower()))
+            #print(decrypted_message + Substitution(args.key).decrypt(args.text.lower()))
+            pass
+        elif args.algorithm == 'playfair':
+            print(decrypted_message + Playfair(args.key, args.text_type))
     else:
         print('Flag or message error')
-    exit()
+    return
+
+if __name__ == '__main__':
+    main()
