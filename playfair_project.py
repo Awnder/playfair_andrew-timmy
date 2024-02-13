@@ -1,5 +1,64 @@
 import argparse
 
+class Substitution:
+    #TODO - account for uppercase
+    def __init__(self, key):
+
+        # Validates the key. Raises an exception if the key is not valid
+        self.validate_key(key)
+
+        self.key = key
+
+    def validate_key(self, key):
+        ''' Ensures the key is 27 characters long,\
+            and that every char present in the alphabet is present in the key. '''
+        
+        if len(key) != 27:
+            raise Exception(f"Error: Incorrect key length (expected 27, got {len(key)})")
+        alphabet = "abcdefghijklmnopqrstuvwxyz "
+        for a in alphabet:
+            if a not in key:
+                raise Exception(f"Error: Expected '{a}' in alphabet, but not found")
+
+    def encrypt(self, plaintext):
+        ''' Encrypts the message using a substitution cipher. '''
+
+        alphabet = "abcdefghijklmnopqrstuvwxyz "
+        ciphertext = ""
+        for ch in plaintext:
+            idx = alphabet.find(ch)
+            ciphertext += self.key[idx]
+        return ciphertext
+    
+    def decrypt(self, ciphertext):
+        ''' Decrypts the message using a substitution cipher. '''
+
+        alphabet = "abcdefghijklmnopqrstuvwxyz "
+        plaintext = ""
+        for ch in ciphertext:
+            idx = self.key.find(ch)
+            plaintext += alphabet[idx]
+        return plaintext
+
+class RailFence:
+    #TODO - add number of rails as key - will make key required for railfence (?)
+    def __init__(self) -> None:    
+        self.even = []
+        self.odd = []
+
+    def encrypt(self, plaintext):
+        ''' Encrypt text using the rail fence cipher. '''
+
+        for i in range(len(plaintext)):
+            if i % 2 == 0:
+                self.even.append(plaintext[i])
+            else:
+                self.odd.append(plaintext[i])
+        
+        ciphertext = "".join(self.even) + "".join(self.odd)
+
+        return ciphertext
+
 class Playfair:
     def __init__(self, keyword):
         self.grid = self.create_playfair_grid(keyword)
