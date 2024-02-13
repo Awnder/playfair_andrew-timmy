@@ -3,6 +3,10 @@ class Playfair:
         self.grid = self.create_playfair_grid(keyword)
     
     def create_playfair_grid(self):
+        '''
+        Creates the grid by removing j, repeating characters in keyword, and adding the rest of the alphabet to a
+        5x5 list of list of characters [ [a,b,c,d,e],[f,g,h,i,k] . . . ]
+        '''
         alphabet = "abcdfeghiklmnopqrstuvwxyz"
         playfair_grid = []
         keyword = self.removeKeywordDupes(keyword.lower().replace('j','').replace(' ',''))
@@ -12,6 +16,7 @@ class Playfair:
         return playfair_grid
 
     def removeKeywordDupes(self, keyword):
+        '''Removes duplicate characters in a keyword'''
         newKey = ''
         for c in keyword:
             if c not in newKey:
@@ -19,10 +24,12 @@ class Playfair:
         return newKey
 
     def print_playfair_grid(self):
+        '''Prints rows in playfair grid'''
         for row in self.grid:
             print(row)
 
     def decode_playfair_digrams(self, ciphertext):
+        '''Breaks ciphertext into a plaintext string, removing q's'''
         plaintext = []
         for index in range(len(ciphertext)-1, -1, -1):
             if index == 0 or index == len(ciphertext) - 1:
@@ -33,6 +40,7 @@ class Playfair:
         return ''.join(reversed(plaintext))
 
     def encode_playfair_digrams(self, plaintext):
+        '''Breaks plaintext into a string of digrams, adding q's when letter repeats or at end if odd number of characters'''
         digrams = list(plaintext.lower().replace(' ', ''))
         
         for i, digram in enumerate(digrams):
@@ -78,8 +86,10 @@ class Playfair:
         return [(letter1_row, new_letter1_col), (letter2_row, new_letter2_col)]
     
     def get_column_shift(pos1, pos2, encrypt):
-        # TIMMY
-        # encrypt is a bool - determines sign of addition
+        '''
+        When two letters are in the same col, pos1 and pos2 are the letters' indecies as (row, col) tuples and bool
+        encrypt changes the direction of shift +1 (down) or -1 (up)
+        '''
 
         shift = 1 if encrypt else -1
         newpos1 = (pos1[0], (pos1[1] + shift) % 5)
@@ -88,7 +98,10 @@ class Playfair:
         return [newpos1, newpos2]
     
     def get_row_shift(pos1, pos2, encrypt):
-        # TIMMY
+        '''
+        When two letters are in the same row, pos1 and pos2 are the letters' indecies as (row, col) tuples and bool
+        encrypt changes the direction of shift +1 (right) or -1 (left)
+        '''
 
         shift = 1 if encrypt else -1
         newpos1 = ((pos1[0] + shift) % 5, pos1[1])
