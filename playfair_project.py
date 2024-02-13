@@ -55,7 +55,7 @@ class Playfair:
         
         return ''.join(digrams)
     
-    def get_pos(grid, letter):
+    def get_pos(self, letter):
         '''Returns a tuple of indecies (row, col) of an inputted letter in a given grid. Returns None otherwise'''
         for row in range(len(self.grid)):
             if letter in self.grid[row]:
