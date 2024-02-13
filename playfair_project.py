@@ -146,7 +146,7 @@ def main():
     text_type.add_argument('-e', '--encrypt', action='store_true', help='message to encrypt')
     text_type.add_argument('-d', '--decrypt', action='store_true', help='message to decrypt')
     parser.add_argument('-k', '--key', type=str, help='the key/password to use for playfair/substitution')
-    parser.add_argument('text', type=str, help='the text to encrypt or decrypt')
+    parser.add_argument('-t', '--text', type=str, help='the text to encrypt or decrypt')
     args = parser.parse_args()
 
     if ((args.algorithm == 'substitution' or args.algorithm == 'playfair') and not args.key):
@@ -164,7 +164,7 @@ def main():
             #print(encrypted_message + Substitution(args.key).encrypt(args.text.lower()))
             pass
         elif args.algorithm == 'playfair':
-            print(encrypted_message + Playfair(args.key, args.text_type))
+            print(encrypted_message + Playfair(args.key, args.encrypt))
     elif args.decrypt:
         if args.algorithm == 'railfence':
             #print(decrypted_message + RailFence().decrypt(args.text))
@@ -173,7 +173,7 @@ def main():
             #print(decrypted_message + Substitution(args.key).decrypt(args.text.lower()))
             pass
         elif args.algorithm == 'playfair':
-            print(decrypted_message + Playfair(args.key, args.text_type))
+            print(decrypted_message + Playfair(args.key, args.decrypt))
     else:
         print('Flag or message error')
     return
