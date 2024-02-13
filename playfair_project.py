@@ -126,12 +126,12 @@ class Playfair:
         # Crypt digrams with the key
         for d in input_digrams:
             posits = [self.get_pos(d[0]), self.get_pos(d[1])]
-            if d[0][0] == d[1][0]:
-                crypted_digrams.append(self.get_column_shift(d[0], d[1], encrypt))
-            elif d[0][1] == d[1][1]:
-                crypted_digrams.append(self.get_row_shift(d[0], d[1], encrypt))
+            if posits[0][0] == posits[1][0]:
+                crypted_digrams.append(self.get_column_shift(posits[0], posits[1], encrypt))
+            elif posits[0][1] == posits[1][1]:
+                crypted_digrams.append(self.get_row_shift(posits[0], posits[1], encrypt))
             else:
-                crypted_digrams.append(self.get_rectangle_shift(d[0], d[1]))
+                crypted_digrams.append(self.get_rectangle_shift(posits[0], posits[1]))
 
         # Decode the digrams
         crypted = self.decode_playfair_digrams(crypted_digrams)
@@ -158,19 +158,19 @@ def main():
     
     if args.encrypt:
         if args.algorithm == 'railfence':
-            #print(encrypted_message + RailFence().encrypt(args.text))
+            print(encrypted_message + RailFence().encrypt(args.text))
             pass
         elif args.algorithm == 'substitution':
-            #print(encrypted_message + Substitution(args.key).encrypt(args.text.lower()))
+            print(encrypted_message + Substitution(args.key).encrypt(args.text.lower()))
             pass
         elif args.algorithm == 'playfair':
             print(encrypted_message + Playfair(args.key, args.encrypt))
     elif args.decrypt:
         if args.algorithm == 'railfence':
-            #print(decrypted_message + RailFence().decrypt(args.text))
+            print(decrypted_message + RailFence().decrypt(args.text))
             pass
         elif args.algorithm == 'substitution':
-            #print(decrypted_message + Substitution(args.key).decrypt(args.text.lower()))
+            print(decrypted_message + Substitution(args.key).decrypt(args.text.lower()))
             pass
         elif args.algorithm == 'playfair':
             print(decrypted_message + Playfair(args.key, args.decrypt))
