@@ -133,10 +133,11 @@ class Playfair:
 
         if len(digrams) % 2 == 1: # if last digram does not have pair
             digrams.append('q')
-            
+
         return ''.join(digrams)
     
     def get_letter(self, row, col):
+        ''''''
         return self.grid[row][0][col] # because the grid is a list of lists of a string, [0] needs to be present to access string
     
     def get_pos(self, letter):
@@ -232,13 +233,10 @@ def main():
     parser.add_argument('-k', '--key', type=str, help='the key/password to use for playfair/substitution')
     parser.add_argument('-t', '--text', type=str, help='the text to encrypt or decrypt')
     args = parser.parse_args()
-
-    if ((args.algorithm == 'substitution' or args.algorithm == 'playfair') and not args.key):
-        print(f"Please provide a password for {args.algorithm}")
-        return
     
     if ((args.algorithm == 'substitution' or args.algorithm == 'playfair') and not (args.encrypt or args.decrypt)):
         print(f"Please provide a mode (encrypt/decrypt) for {args.algorithm}")
+        return
     
     encrypted_message = "Encrypted Message: "
     decrypted_message = "Decrypted Message: "
