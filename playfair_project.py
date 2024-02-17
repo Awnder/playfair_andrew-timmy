@@ -1,7 +1,8 @@
+#crypt program created by Andrew and Timmy
+
 import argparse
 
 class Substitution:
-    #TODO - account for uppercase
     def __init__(self, password):
         self.alphabet = "abcdefghijklmnopqrstuvwxyz "
         self.key = self.generateKeyFromPassword(password)
@@ -68,11 +69,15 @@ class RailFence:
         return ciphertext
 
 class Playfair:
+    '''
+    Algorithm that uses encryption/decryption playfair method. The grid is 5 lists of lists containing a 5 character string and
+    encrypt is a bool used to determine encryption or decryption
+    '''
     def __init__(self, keyword, encrypt):
         self.grid = self.create_playfair_grid(keyword)
         self.encrypt = encrypt
     
-    def create_playfair_grid(self):
+    def create_playfair_grid(self, keyword):
         '''
         Creates the grid by removing j, repeating characters in keyword, and adding the rest of the alphabet to a
         5x5 list of list of characters [ [a,b,c,d,e],[f,g,h,i,k] . . . ]
@@ -99,20 +104,28 @@ class Playfair:
             print(row)
 
     def decode_playfair_digrams(self, ciphertext):
-        '''Breaks ciphertext into a plaintext string, removing q's'''
+        '''Breaks ciphertext into a plaintext string, removing q's, returns a string'''
         plaintext = []
         for index in range(len(ciphertext)-1, -1, -1):
             if index == 0 or index == len(ciphertext) - 1:
                 plaintext.append(ciphertext[index])
                 continue
-            if ciphertext[index] != ciphertext[index-1] and ciphertext[index] != ciphertext[index+1]:
-                plaintext.append(ciphertext[index])
+            if ciphertext[index] == 'q' and ciphertext[index-1] == ciphertext[index+1]:
+                continue
+            plaintext.append(ciphertext[index])
+        
+        # removes last q of string if exists (index 0 b/c reversed)
+        if plaintext[0] == 'q':
+            plaintext.pop(0)
+
         return ''.join(reversed(plaintext))
 
     def encode_playfair_digrams(self, plaintext):
-        '''Breaks plaintext into a string of digrams, adding q's when letter repeats or at end if odd number of characters'''
-        digrams = list(plaintext.lower().replace(' ', ''))
-        
+        '''
+        Breaks plaintext into a string of digrams, adding q's when letter repeats or at end if odd number of characters, 
+        returns a string
+        '''
+        digrams = list(plaintext.replace(' ', ''))
         for i, digram in enumerate(digrams):
             if i % 2 == 1:
                 if digram == digrams[i-1]:
@@ -120,17 +133,21 @@ class Playfair:
 
         if len(digrams) % 2 == 1: # if last digram does not have pair
             digrams.append('q')
-        
+            
         return ''.join(digrams)
+    
+    def get_letter(self, row, col):
+        return self.grid[row][0][col] # because the grid is a list of lists of a string, [0] needs to be present to access string
     
     def get_pos(self, letter):
         '''Returns a tuple of indecies (row, col) of an inputted letter in a given grid. Returns None otherwise'''
-        for row in range(len(self.grid)):
-            if letter in self.grid[row]:
-                return (row, self.grid[row].index(letter))
+        for row_index, row in enumerate(self.grid):
+            for col_index, col in enumerate(row):
+                if letter in row[col_index]:
+                    return (row_index,row[col_index].index(letter))
         return None
 
-    def get_rectangle_shift(pos1, pos2):
+    def get_rectangle_shift(self, pos1, pos2):
         '''
         When two letters are not in same column or row, switch them along a rectangle, where pos1 and pos2 are two 
         letters' indecies as (row, col) tuples. Bool encrypt isn't needed as function will flip letter location 
@@ -145,7 +162,6 @@ class Playfair:
 
         col_difference = abs(letter1_col - letter2_col)
 
-        print((letter1_row,letter1_col),(letter2_row,letter2_col))
         if letter1_col < letter2_col:
             new_letter1_col = letter1_col + col_difference
             new_letter2_col = letter2_col - col_difference
@@ -155,55 +171,54 @@ class Playfair:
             
         return [(letter1_row, new_letter1_col), (letter2_row, new_letter2_col)]
     
-    def get_column_shift(pos1, pos2, encrypt):
+    def get_column_shift(self, pos1, pos2, encrypt):
         '''
         When two letters are in the same col, pos1 and pos2 are the letters' indecies as (row, col) tuples and bool
         encrypt changes the direction of shift +1 (down) or -1 (up)
         '''
-
         shift = 1 if encrypt else -1
         newpos1 = (pos1[0], (pos1[1] + shift) % 5)
         newpos2 = (pos2[0], (pos2[1] + shift) % 5)
         
         return [newpos1, newpos2]
     
-    def get_row_shift(pos1, pos2, encrypt):
+    def get_row_shift(self, pos1, pos2, encrypt):
         '''
         When two letters are in the same row, pos1 and pos2 are the letters' indecies as (row, col) tuples and bool
         encrypt changes the direction of shift +1 (right) or -1 (left)
         '''
-
         shift = 1 if encrypt else -1
         newpos1 = ((pos1[0] + shift) % 5, pos1[1])
         newpos2 = ((pos2[0] + shift) % 5, pos2[1])
         
         return [newpos1, newpos2]
-        return
     
     def crypt(self, text):
-        # encrypt is a bool determining mode (encrypt or decrypt)
-        encrypt = self.encrypt
-
         crypted_digrams = []
 
         # Turn text into digrams
         input_digrams = self.encode_playfair_digrams(text)
 
-        # Create grid from key
-        grid = self.grid
-
-        # Crypt digrams with the key
-        for d in input_digrams:
-            posits = [self.get_pos(d[0]), self.get_pos(d[1])]
+        # Crypt digrams with the key, producing a list of index tuples for each digram like this: [(1,3), (2,2)]
+        index = 1
+        while index < len(input_digrams):
+            posits = [self.get_pos(input_digrams[index-1]),self.get_pos(input_digrams[index])]
             if posits[0][0] == posits[1][0]:
-                crypted_digrams.append(self.get_column_shift(posits[0], posits[1], encrypt))
+                crypted_digrams.append(self.get_column_shift(posits[0], posits[1], self.encrypt))
             elif posits[0][1] == posits[1][1]:
-                crypted_digrams.append(self.get_row_shift(posits[0], posits[1], encrypt))
+                crypted_digrams.append(self.get_row_shift(posits[0], posits[1], self.encrypt))
             else:
                 crypted_digrams.append(self.get_rectangle_shift(posits[0], posits[1]))
+            index += 2
 
-        # Decode the digrams
-        crypted = self.decode_playfair_digrams(crypted_digrams)
+        # Takes the list of indecies and produces a digram string 
+        new_text = ''
+        for digram in crypted_digrams:
+            new_text += self.get_letter(digram[0][0], digram[0][1])
+            new_text += self.get_letter(digram[1][0], digram[1][1])
+
+        # Decode the digram string
+        crypted = self.decode_playfair_digrams(new_text)
 
         # Return the result
         return crypted
