@@ -6,6 +6,7 @@ Allows for Substitution, RailFence, and Playfair encryption using command line k
 import argparse
 
 class Substitution:
+    ''' Encrypts/decrypts text using the Substitution cipher'''
     def __init__(self, password):
         self.alphabet = "abcdefghijklmnopqrstuvwxyz "
         self.key = self.generateKeyFromPassword(password)
@@ -54,7 +55,7 @@ class Substitution:
         return password + afterStr + beforeStr 
 
 class RailFence:
-    #TODO - add number of rails as key - will make key required for railfence (?)
+    ''' Encrypts/decrypts text using the Railfence cipher'''
     def __init__(self) -> None:    
         self.even = []
         self.odd = []
@@ -73,7 +74,7 @@ class RailFence:
 
 class Playfair:
     '''
-    Algorithm that uses encryption/decryption playfair method. The grid is 5 lists of lists containing a 5 character string and
+    Encrypts/decrypts text using the Playfair cipher. The grid is 5 lists of lists containing a 5 character string and
     encrypt is a bool used to determine encryption or decryption
     '''
     def __init__(self, keyword, encrypt):
