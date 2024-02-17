@@ -1,4 +1,7 @@
-#crypt program created by Andrew and Timmy
+'''
+Crypt program created by Andrew and Timmy
+Allows for Substitution, RailFence, and Playfair encryption using command line keyword arguments
+'''
 
 import argparse
 
@@ -41,6 +44,7 @@ class Substitution:
         return newAlphabet
     
     def generateKeyFromPassword(self, password):
+        '''Creates a unique key by removing duplicates and adding alphabet onto the given password'''
         password = password.lower()
         password = self.removePasswordDupes(password)
         splitChr = password[-1]
@@ -57,7 +61,6 @@ class RailFence:
 
     def encrypt(self, plaintext):
         ''' Encrypt text using the rail fence cipher. '''
-
         for i in range(len(plaintext)):
             if i % 2 == 0:
                 self.even.append(plaintext[i])
@@ -137,7 +140,7 @@ class Playfair:
         return ''.join(digrams)
     
     def get_letter(self, row, col):
-        ''''''
+        '''Returns the letter specified by row, col incedies'''
         return self.grid[row][0][col] # because the grid is a list of lists of a string, [0] needs to be present to access string
     
     def get_pos(self, letter):
@@ -195,6 +198,10 @@ class Playfair:
         return [newpos1, newpos2]
     
     def crypt(self, text):
+        '''
+        Body of Playfair algorithm. Encrypt bool specifies encryption/decryption. Turns text into digrams, performs the
+        encryption/decryption, and returns the new string
+        '''
         crypted_digrams = []
 
         # Turn text into digrams
