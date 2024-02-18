@@ -17,14 +17,14 @@ Download the crypto.py file and run from the terminal with non-positional comman
 ## 1) Substitution
 This method uses a substitution cipher with an alphabetic key. 
 
-Example: crypt.py -a substitution -e -k "password" -t "hello world"
+Example: crypto.py -a substitution -e -k "password" -t "hello world"
 
 ## 2) Railfence
 This method uses a 2-rail railfence cipher to crypt text.
 
-Example: crypt.py -a railfence -d -t "hlowrdel ol"
+Example: crypto.py -a railfence -d -t "hlowrdel ol"
 
 ## 3) Playfair
 This method uses the playfair cipher and an alphabetic key to generate a 5x5 grid. J's are replaced with I's and removes spaces from text.
 
-Example: crypt.py -a playfair -e -k "password" -t "hello world"
+Example: crypto.py -a playfair -e -k "password" -t "hello world"
