@@ -62,6 +62,7 @@ class RailFence:
 
     def encrypt(self, plaintext):
         ''' Encrypt text using the rail fence cipher. '''
+
         for i in range(len(plaintext)):
             if i % 2 == 0:
                 self.even.append(plaintext[i])
@@ -71,6 +72,26 @@ class RailFence:
         ciphertext = "".join(self.even) + "".join(self.odd)
 
         return ciphertext
+
+    def decrypt(self, ciphertext):
+        ''' Decrypt rail fence cipher text. '''
+
+        # Upside-down floor division to obtain long-biased midpoint index
+        # (alternative to math.ceil())
+        # https://stackoverflow.com/a/17511341/674039
+        mid = -(len(ciphertext) // -2)
+        self.even = ciphertext[:mid]
+        self.odd = ciphertext[mid:]
+
+        plaintext = ""
+
+        # self.odd is never longer than self.even (0-based counting)
+        for i in range(len(self.odd)):
+            plaintext += self.even[i] + self.odd[i]
+        if len(self.even) > len(self.odd):
+            plaintext += self.even[-1]
+        
+        return plaintext
 
 class Playfair:
     '''
@@ -242,21 +263,23 @@ def main():
     parser.add_argument('-t', '--text', type=str, help='the text to encrypt or decrypt')
     args = parser.parse_args()
     
-    if ((args.algorithm == 'substitution' or args.algorithm == 'playfair') and not (args.encrypt or args.decrypt)):
+    if not (args.encrypt or args.decrypt):
         print(f"Please provide a mode (encrypt/decrypt) for {args.algorithm}")
         return
     
     encrypted_message = "Encrypted Message: "
     decrypted_message = "Decrypted Message: "
 
-    if args.algorithm == 'railfence':
-        print(encrypted_message + RailFence().encrypt(args.text))
-    elif args.encrypt:
+    if args.encrypt:
+        if args.algorithm == 'railfence':
+            print(encrypted_message + RailFence().encrypt(args.text))
         if args.algorithm == 'substitution':
             print(encrypted_message + Substitution(args.key).encrypt(args.text.lower()))
         elif args.algorithm == 'playfair':
             print(encrypted_message + Playfair(args.key, True).crypt(args.text.lower()))
     elif args.decrypt:
+        if args.algorithm == 'railfence':
+            print(decrypted_message + RailFence().decrypt(args.text))
         if args.algorithm == 'substitution':
             print(decrypted_message + Substitution(args.key).decrypt(args.text.lower()))
         elif args.algorithm == 'playfair':
