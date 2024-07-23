@@ -226,12 +226,15 @@ class Playfair:
         '''
         crypted_digrams = []
 
+        self.print_playfair_grid()
+
         # Turn text into digrams
         input_digrams = self.encode_playfair_digrams(text)
 
         # Crypt digrams with the key, producing a list of index tuples for each digram like this: [(1,3), (2,2)]
         index = 1
         while index < len(input_digrams):
+            print([self.get_pos(input_digrams[index-1]),self.get_pos(input_digrams[index])])
             posits = [self.get_pos(input_digrams[index-1]),self.get_pos(input_digrams[index])]
             if posits[0][0] == posits[1][0]:
                 crypted_digrams.append(self.get_column_shift(posits[0], posits[1], self.encrypt))
@@ -265,6 +268,10 @@ def main():
     
     if not (args.encrypt or args.decrypt):
         print(f"Please provide a mode (encrypt/decrypt) for {args.algorithm}")
+        return
+    
+    if args.algorithm == 'playfair' and not args.key:
+        print(f"Please provide a key for {args.algorithm}")
         return
     
     encrypted_message = "Encrypted Message: "
