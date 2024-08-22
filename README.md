@@ -1,3 +1,4 @@
+# NOTE: this cryptography project currently has some errors and does not run as intended.
 # Cryptography Project
 This python file uses three types of ciphers to encrypt and decrypt text. The file uses command-line arguments to specify encryption, key/passwords, and text. 
 
